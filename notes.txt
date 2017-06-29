@@ -1,0 +1,12 @@
+Questions todo:
+
+Events or DI or both?
+How to hold the 2d map?
+
+
+
+grid as 9x11, objects are 16x16 (or 32x32)
+
+total width = 20x32=640 (1/2 tile either side)
+total heigth = (13++)x32=416 (plus title, buttons, timer)
+
