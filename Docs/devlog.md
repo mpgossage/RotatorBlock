@@ -35,3 +35,25 @@ Rather then actually moving the blocks about (which will get messy), instead cha
 Idea looks like a GridModel which holds the grid and a GridView which displays it.  Animation will be on the view, but the actual updating of grid will be on the model (not having a controller).  Inputs can be detected at view level and send out as events.
 No actual work done, just a bit of thinking for today.
 
+## 29 June
+Installing Zenject and building the main code.
+Its always tricky to get started. 
+* New Scene
+* Add SceneContext object
+ * Add MonoInstaller to SceneContext
+* Create injectable class (either C# or MonoBehaviour)
+ * Add to the MonoInstaller
+ * Unless its already in the scene, then add a ZenjectBinding
+* Create a user of the injectable
+* Test
+
+We can also use a settings installer, which is a scriptable object, but can hold all our settings & even the sprites to use (keeping it apart from the view)
+* Create SettingsInstaller class
+  * Create a scriptable object instance 
+  * Add the scriptable object instance to the SceneContext
+* In XxxView.cs
+  * Add a System.Serializable Settings struct with all the atts you need
+  * [Inject] the Settings into your XxxView
+* Add a public XxxView.Settings instance into your SettingsInstaller and int the InstallBindings `Container.BindInstance()` to it
+* Find the scriptable object instance and add your settings to it
+* Test
