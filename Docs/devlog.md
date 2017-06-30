@@ -57,3 +57,10 @@ We can also use a settings installer, which is a scriptable object, but can hold
 * Add a public XxxView.Settings instance into your SettingsInstaller and int the InstallBindings `Container.BindInstance()` to it
 * Find the scriptable object instance and add your settings to it
 * Test
+
+Had some issues with having 2 injected grids (left and right), and bigger issues with Zenjects new signal implementation, but managed to overcome.
+
+# 30 June
+Managed to fix Zenject issues and got rotation (on a fixed area) working ok.
+![Alt](devlog-172530.gif) 
+Next stage will be drawing this using the mouse.  Then probably move on to thinking about actual gameplay.

@@ -7,7 +7,11 @@ public class RotatorBlockInstaller : MonoInstaller<RotatorBlockInstaller>
     {
         // we need 2 GameGridModel's for the left & the right
         // so we use WithId("...") and [Inject(Id="...")]
-        Container.Bind<GameGridModel>().WithId("left").AsSingle();
-        Container.Bind<GameGridModel>().WithId("right").AsSingle();
+        // because they are different, use AsCached rather than AsSingle
+        Container.Bind<GameGridModel>().WithId("left").AsCached();
+        Container.Bind<GameGridModel>().WithId("right").AsCached();
+
+        // install the signals bindings
+        Signals.InstallBindings(Container);
     }
 }

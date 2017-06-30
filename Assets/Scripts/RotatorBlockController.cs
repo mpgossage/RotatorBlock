@@ -9,7 +9,8 @@ public class RotatorBlockController : MonoBehaviour
     GameGridModel leftGrid;
     [Inject(Id = "right")]
     GameGridModel rightGrid;
-
+    [Inject]
+    Signals.GridUpdated gridUpdated;
 
     [SerializeField] // for now
     TextAsset levelJson;
@@ -17,18 +18,32 @@ public class RotatorBlockController : MonoBehaviour
     LevelFormat level;
 
     // Use this for initialization
-    void Start ()
+    [Inject]
+    void OnInject()
     {
         LoadLevel();
         // check if it worked:
-        //Debug.LogFormat("Left {0} Right {1}", leftGrid, rightGrid);
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        //Debug.LogFormat("Left {0} Right {1}", leftGrid.GetHashCode(), rightGrid.GetHashCode());
+
+        gridUpdated.Fire(); // triggers initial setup
+    }
+
+    // Update is called once per frame
+    void Update ()
+    {
+        int top = 1, left = 3, bottom = 5, right = 6;
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            leftGrid.Rotate(left, top, right, bottom, false);
+            gridUpdated.Fire();
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            leftGrid.Rotate(left, top, right, bottom, true);
+            gridUpdated.Fire();
+        }
+
+    }
 
     void LoadLevel()
     {

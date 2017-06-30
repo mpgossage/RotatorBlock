@@ -25,7 +25,6 @@ public class TestGrid : MonoBehaviour
 
     void MakeTiles()
     {
-        int tileIndex = Random.Range(0, tiles.Length);
         for (int j=0;j<HEIGHT;j++)
         {
             for(int i=0;i<WIDTH;i++)
