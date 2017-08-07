@@ -3,7 +3,8 @@
 ## 6 June
 Basic test code (TestGrid.cs) to check the ability to create 100+ blocks at startup. Its not much to look at, but I needed to be sure if could be done.
 
-![Alt](devlog-170606.gif) 
+![Drawing a load of blocks](devlog-170606.gif) 
+
 Its not much to see, a mass of random tiles appearing
 
 (Tech note to self: http://www.screentogif.com/ seems a great tool for animated gif capture, lets have at least one per log)
@@ -19,8 +20,9 @@ Also using an idea from http://answers.unity3d.com/questions/40568/base64-encode
 
 Ran rough test of loading code, almost worked except for the Unity +y is up vs +y is down in arrays.
 
-![Alt](devlog-172506.gif) 
-Almost right, the json and the screen.
+![improved block drawing](devlog-170625.gif) 
+
+Almost right, reading from json and display on the screen.
 
 Going to take a little more work to get is 100% correct on the screen, but the idea is good.
 
@@ -54,7 +56,7 @@ We can also use a settings installer, which is a scriptable object, but can hold
 * In XxxView.cs
   * Add a System.Serializable Settings struct with all the atts you need
   * [Inject] the Settings into your XxxView
-* Add a public XxxView.Settings instance into your SettingsInstaller and int the InstallBindings `Container.BindInstance()` to it
+* Add a public XxxView.Settings instance into your SettingsInstaller and add the InstallBindings `Container.BindInstance()` to it
 * Find the scriptable object instance and add your settings to it
 * Test
 
@@ -62,5 +64,21 @@ Had some issues with having 2 injected grids (left and right), and bigger issues
 
 # 30 June
 Managed to fix Zenject issues and got rotation (on a fixed area) working ok.
-![Alt](devlog-172530.gif) 
+
+![blocks being rotated](devlog-170630.gif) 
+
 Next stage will be drawing this using the mouse.  Then probably move on to thinking about actual gameplay.
+
+
+# 7 Aug
+Been away from project a long time working on game jams & such like.
+Added a new GridFrameView which shows the grid frame (unity has a 9 sliced mode which is great).
+Eventually got it working.
+![drawing a rectangle](devlog-170807.gif) 
+
+Now to add the rotation routine.
+Added a iSelectionRectangle interface to pass this to the rest of the code. Needed to use a ZenjectBinding to attach this.
+
+![mouse based rotation](devlog-170807-2.gif) 
+
+Next task, proper tweening and adding of gravity.

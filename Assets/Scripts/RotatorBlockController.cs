@@ -11,6 +11,8 @@ public class RotatorBlockController : MonoBehaviour
     GameGridModel rightGrid;
     [Inject]
     Signals.GridUpdated gridUpdated;
+    [Inject]
+    iSelectionRect selectionRect;
 
     [SerializeField] // for now
     TextAsset levelJson;
@@ -31,14 +33,21 @@ public class RotatorBlockController : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
-        int top = 1, left = 3, bottom = 5, right = 6;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            leftGrid.Rotate(left, top, right, bottom, false);
+            Rect r = selectionRect.GetSelectionRect();
+            int left = Mathf.RoundToInt(r.xMin), top = Mathf.RoundToInt(r.yMin),
+                right = Mathf.RoundToInt(r.xMax), bottom = Mathf.RoundToInt(r.yMax);
+            Debug.LogFormat("RotateLeft {0} {1} {2} {3}", left,top,right,bottom);
+            leftGrid.Rotate(left,top,right,bottom,false);
             gridUpdated.Fire();
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
+            Rect r = selectionRect.GetSelectionRect();
+            int left = Mathf.RoundToInt(r.xMin), top = Mathf.RoundToInt(r.yMin),
+                right = Mathf.RoundToInt(r.xMax), bottom = Mathf.RoundToInt(r.yMax);
+            Debug.LogFormat("RotateRight {0} {1} {2} {3}", left, top, right, bottom);
             leftGrid.Rotate(left, top, right, bottom, true);
             gridUpdated.Fire();
         }
