@@ -2,14 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using DG.Tweening;
 
-public class GridView : MonoBehaviour
+interface iGridTileAnimator
+{
+    void AddTween(int x, int y, Vector3 delta, System.Action onComplete = null);
+    void RewindTweens();
+}
+
+public class GridView : MonoBehaviour, iGridTileAnimator
 {
     // this will be set in the set in the SettingsInstaller ScriptableObject
     [System.Serializable]
     public struct Settings 
     {
         public Sprite[] tiles;
+        public float TweenTime;
     }
 
     [Inject]
@@ -33,7 +41,6 @@ public class GridView : MonoBehaviour
     {
         onGridUpdated += OnGridUpdated;
         MakeTiles();
-        OnGridUpdated();
     }
 
     private void OnDestroy()
@@ -48,8 +55,9 @@ public class GridView : MonoBehaviour
         {
             for (int i = 0; i < GameGridModel.WIDTH; i++)
             {
+                var spr = grid[i, j];
                 int val = inputgrid.GetGrid(i, j);
-                grid[i,j].sprite = settings.tiles[val];
+                spr.sprite = settings.tiles[val];
             }
         }
     }
@@ -68,4 +76,18 @@ public class GridView : MonoBehaviour
         }
     }
 
+    public void AddTween(int x, int y, Vector3 delta, System.Action onComplete = null)
+    {
+        var trans = grid[x, y].transform;
+        Vector3 tgtpos = trans.position+delta;
+        var tween = trans.DOMove(tgtpos, settings.TweenTime);
+        if (onComplete != null)
+        {
+            tween.OnComplete(()=>onComplete());
+        }
+    }
+    public void RewindTweens()
+    {
+        DOTween.RewindAll();
+    }
 }

@@ -13,11 +13,14 @@ public class RotatorBlockController : MonoBehaviour
     Signals.GridUpdated gridUpdated;
     [Inject]
     iSelectionRect selectionRect;
+    [Inject]
+    iGridTileAnimator animator;
 
     [SerializeField] // for now
     TextAsset levelJson;
 
     LevelFormat level;
+    private bool isAnimating=false;
 
     // Use this for initialization
     [Inject]
@@ -27,31 +30,69 @@ public class RotatorBlockController : MonoBehaviour
         // check if it worked:
         //Debug.LogFormat("Left {0} Right {1}", leftGrid.GetHashCode(), rightGrid.GetHashCode());
 
+    }
+
+    private void Start() // inject is called before start, so we are sure its finished all injections
+    {
         gridUpdated.Fire(); // triggers initial setup
     }
 
     // Update is called once per frame
     void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            Rect r = selectionRect.GetSelectionRect();
-            int left = Mathf.RoundToInt(r.xMin), top = Mathf.RoundToInt(r.yMin),
-                right = Mathf.RoundToInt(r.xMax), bottom = Mathf.RoundToInt(r.yMax);
-            Debug.LogFormat("RotateLeft {0} {1} {2} {3}", left,top,right,bottom);
-            leftGrid.Rotate(left,top,right,bottom,false);
-            gridUpdated.Fire();
+        if (!isAnimating)
+        {       
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                Rotate(false);
+            }            
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                Rotate(true);
+            }
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            Rect r = selectionRect.GetSelectionRect();
-            int left = Mathf.RoundToInt(r.xMin), top = Mathf.RoundToInt(r.yMin),
-                right = Mathf.RoundToInt(r.xMax), bottom = Mathf.RoundToInt(r.yMax);
-            Debug.LogFormat("RotateRight {0} {1} {2} {3}", left, top, right, bottom);
-            leftGrid.Rotate(left, top, right, bottom, true);
-            gridUpdated.Fire();
-        }
+    }
 
+    void Rotate(bool clockwise)
+    {
+        isAnimating = true;
+        Rect r = selectionRect.GetSelectionRect();
+        int left = Mathf.RoundToInt(r.xMin), top = Mathf.RoundToInt(r.yMin),
+            right = Mathf.RoundToInt(r.xMax), bottom = Mathf.RoundToInt(r.yMax);
+
+        System.Action done = () => {
+            animator.RewindTweens();    // reset the tweens
+            leftGrid.Rotate(left, top, right, bottom, clockwise);
+            gridUpdated.Fire();
+            this.isAnimating = false;   // animating end
+        };
+
+        if (clockwise)
+        {
+            // special case LT
+            animator.AddTween(left, top, Vector3.right, done);
+            for (int x = left+1; x < right; x++)  // top row right (not LT)
+                animator.AddTween(x, top, Vector3.right);
+            for (int y = top; y < bottom; y++)  // right col down
+                animator.AddTween(right, y, Vector3.down);
+            for (int x = left + 1; x <= right; x++)  // bottom row left (not LB, inc RB)
+                animator.AddTween(x, bottom, Vector3.left);
+            for (int y = top+1; y <= bottom; y++)  // left col up (not LT, inc LB)
+                animator.AddTween(left, y, Vector3.up);
+        }
+        else
+        {
+            // special case LT
+            animator.AddTween(left, top, Vector3.down, done);
+            for (int x = left + 1; x <= right; x++)  // top row left (not LT)
+                animator.AddTween(x, top, Vector3.left);
+            for (int y = top+1; y <= bottom; y++)  // right col up (not RT, inc RB)
+                animator.AddTween(right, y, Vector3.up);
+            for (int x = left; x < right; x++)  // bottom row left (not RB, inc LB)
+                animator.AddTween(x, bottom, Vector3.right);
+            for (int y = top + 1; y < bottom; y++)  // left col down (not LT, not LB)
+                animator.AddTween(left, y, Vector3.down);
+        }   
     }
 
     void LoadLevel()

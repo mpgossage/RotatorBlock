@@ -82,3 +82,15 @@ Added a iSelectionRectangle interface to pass this to the rest of the code. Need
 ![mouse based rotation](devlog-170807-2.gif) 
 
 Next task, proper tweening and adding of gravity.
+
+# 8 Aug
+Got an idea on how to do this tweening. Control decides the action, sets a moving flag, informs view to do the tween with a callback fn to control. Once the control gets the callback, it can update the model, fire event to make the view update its data and reset its sprite positions at the same time.
+
+This means that view will need an injectable interface on the view.
+
+Managed that with some issues on the order or injection (if you need something done after injection use Start() )
+
+![rotation with tweens](devlog-170808.gif)
+
+Next task, solid blocks (which cannot be moved) and empty (which apply gravity).
+ 
