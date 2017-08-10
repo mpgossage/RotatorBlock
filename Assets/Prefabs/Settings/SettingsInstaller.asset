@@ -13,8 +13,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridSettings:
     tiles:
-    - {fileID: 21300000, guid: 0d9ec8b484fe4634092b231ffee59e72, type: 3}
-    - {fileID: 21300000, guid: a23a6005d52032a4abe9e75e0b967cec, type: 3}
-    - {fileID: 21300000, guid: 953f9eb2b95aae6448728d429796fbf4, type: 3}
+    - {fileID: 21300000, guid: 3ca463dfb5e1f844586de89bc2478059, type: 3}
+    - {fileID: 21300000, guid: b789a25777668944e9730acda21bd375, type: 3}
+    - {fileID: 21300002, guid: b789a25777668944e9730acda21bd375, type: 3}
+    - {fileID: 21300004, guid: b789a25777668944e9730acda21bd375, type: 3}
+    - {fileID: 21300006, guid: b789a25777668944e9730acda21bd375, type: 3}
+    - {fileID: 21300008, guid: b789a25777668944e9730acda21bd375, type: 3}
+    - {fileID: 21300010, guid: b789a25777668944e9730acda21bd375, type: 3}
+    - {fileID: 21300012, guid: b789a25777668944e9730acda21bd375, type: 3}
+    TweenTime: 1
+    outerGrid: {fileID: 21300000, guid: 18abe2aa21cdcab46af1586ebbfd0fff, type: 3}
   gridFrameSettings:
     sprite: {fileID: 21300000, guid: 24031e6bca5acc24b816660fa26dc128, type: 3}
+    fadeTime: 0.6
+    maxAlpha: 1
+    minAlpha: 0.5

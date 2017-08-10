@@ -6,7 +6,7 @@ using DG.Tweening;
 
 interface iGridTileAnimator
 {
-    void AddTween(int x, int y, Vector3 delta, System.Action onComplete = null);
+    void AddTween(int x, int y, Vector3 delta, bool linear=false, System.Action onComplete = null);
     void RewindTweens();
 }
 
@@ -18,6 +18,7 @@ public class GridView : MonoBehaviour, iGridTileAnimator
     {
         public Sprite[] tiles;
         public float TweenTime;
+        public Sprite outerGrid;
     }
 
     [Inject]
@@ -35,12 +36,14 @@ public class GridView : MonoBehaviour, iGridTileAnimator
     bool isLeft;
 
     private SpriteRenderer[,] grid;
+    private SpriteRenderer outerGrid;
 
     [Inject]
     void OnInjected()   // called post injection
     {
         onGridUpdated += OnGridUpdated;
         MakeTiles();
+        MakeOuterGrid();
     }
 
     private void OnDestroy()
@@ -76,11 +79,26 @@ public class GridView : MonoBehaviour, iGridTileAnimator
         }
     }
 
-    public void AddTween(int x, int y, Vector3 delta, System.Action onComplete = null)
+    void MakeOuterGrid()
+    {
+        GameObject obj = new GameObject("OuterGrid");
+        obj.transform.SetParent(this.transform);
+        outerGrid = obj.AddComponent<SpriteRenderer>();
+        outerGrid.drawMode = SpriteDrawMode.Tiled;
+        outerGrid.sprite = settings.outerGrid;
+        outerGrid.size = new Vector2(1+GameGridModel.WIDTH, 1+GameGridModel.HEIGHT);
+        obj.transform.localPosition = new Vector3(GameGridModel.WIDTH/2, (GameGridModel.HEIGHT+1)/2,0);
+    }
+
+    public void AddTween(int x, int y, Vector3 delta, bool linear=false, System.Action onComplete = null)
     {
         var trans = grid[x, y].transform;
         Vector3 tgtpos = trans.position+delta;
         var tween = trans.DOMove(tgtpos, settings.TweenTime);
+        if (linear)
+        {
+            tween = tween.SetEase(Ease.Linear);
+        }
         if (onComplete != null)
         {
             tween.OnComplete(()=>onComplete());

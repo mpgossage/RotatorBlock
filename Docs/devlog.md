@@ -93,4 +93,19 @@ Managed that with some issues on the order or injection (if you need something d
 ![rotation with tweens](devlog-170808.gif)
 
 Next task, solid blocks (which cannot be moved) and empty (which apply gravity).
- 
+
+# 10 Aug
+
+I'm going to start on looking for tilesets rather then work on the solid blocks and gravity. Added some nicer looking tiles and it makes a big difference.
+
+![nicer tiles](devlog-170810.png)
+
+Now lets look into the falling, handled at controller side.
+
+First thing is which do/do not fall? For now just hard code it, but I think that we should set ranges on what does/not fall.
+
+Got the code in, with a rather nice fade to show enabled/not:
+
+![falling](devlog-170810.gif)
+
+But there is a design issue as the code is getting messy with interfaces everywhere. I need to think on this.

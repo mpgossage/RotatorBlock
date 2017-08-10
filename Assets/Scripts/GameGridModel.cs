@@ -27,33 +27,31 @@ public class GameGridModel
     // returns if the grid set can rotate
     public bool CanRotate(int left, int top, int right, int bottom)
     {
+        UnityEngine.Debug.Assert(left <= right && top <= bottom);
         // range check
         if (left < 0 || left >= WIDTH || right < 0 || right >= WIDTH ||
             top < 0 || top >= HEIGHT || bottom < 0 || bottom >= HEIGHT)
             return false;
         // nothing to do
         if (left == right || top == bottom) return false;
-        // TODO: solid check
+        // solid check:
+        for (int i = left; i <= right; i++)
+        {
+            if (IsSolid(grid[i, top]) || IsSolid(grid[i, bottom])) return false;
+        }
+        for (int j = top; j <= bottom; j++)
+        {
+            if (IsSolid(grid[left, j]) || IsSolid(grid[right, j])) return false;
+        }
+
         return true;
     }
 
     // rotates grid (anti)clockwise by one unit
-    public bool Rotate(int left, int top, int right, int bottom, bool clockwise)
+    public void Rotate(int left, int top, int right, int bottom, bool clockwise)
     {
-        if (!CanRotate(left, top, right, bottom)) return false;
-        // if incorrect order switch left/right top/bottom
-        if (left > right)
-        {
-            int t = left;
-            left = right;
-            right = t;
-        }
-        if (top > bottom)
-        {
-            int t = top;
-            top = bottom;
-            bottom = t;
-        }
+        UnityEngine.Debug.Assert(left <= right && top <= bottom);
+        if (!CanRotate(left, top, right, bottom)) return;
         if (clockwise)
         {
             int topLeft = grid[left, top]; // for later:
@@ -80,7 +78,48 @@ public class GameGridModel
                 grid[left, j] = grid[left, j - 1];
             grid[left, top + 1] = topLeft; // replace overwritten square
         }
-        return true;
+    }
+
+    public bool IsClear(int val)
+    {
+        return val == 0;
+    }
+    public bool CanFall(int val)
+    {
+        return val >= 2;
+    }
+    public bool IsSolid(int val)
+    {
+        return val == 1;
+    }
+
+    // checks for falling blocks and returns them all
+    public bool CheckForFalling(List<KeyValuePair<int,int>> pairs)
+    {
+        pairs.Clear();
+        // working left=>right & bottom=> top
+        for(int i=0;i<WIDTH;i++)
+        {
+            bool falling = false;
+            for(int j=HEIGHT-2; j>=0;j--) // looking at j,j+1
+            {
+                // if it can fall & its on nothing or on a falling block
+                falling = (CanFall(grid[i, j]) &&
+                    (falling || IsClear(grid[i, j + 1])));
+                if (falling)
+                {
+                    pairs.Add(new KeyValuePair<int, int>(i, j));
+                }
+            }
+        }
+        return pairs.Count > 0;
+    }
+
+    // moves a cell down by 1
+    public void MoveDown(int x,int y)
+    {
+        grid[x, y + 1] = grid[x, y];
+        grid[x, y] = 0;
     }
 
 }

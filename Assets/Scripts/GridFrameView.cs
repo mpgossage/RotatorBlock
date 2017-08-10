@@ -17,20 +17,25 @@ public class GridFrameView : MonoBehaviour, iSelectionRect
     public struct Settings
     {
         public Sprite sprite;
+        public float fadeTime, maxAlpha, minAlpha;
     }
 
     [Inject]
     Settings settings;
 
+    [Inject]
+    iRotationEnabled rotationsEnabled;
+
     private SpriteRenderer frame;
     private Rect selection;    // points in GRID coords
     private Vector2 startPos;
+    private Color currentColoúr;
 
     [Inject]
     void OnInjected()   // called post injection
     {
         MakeFrame();
-        selection = new Rect(-100,-100,-100,-100);
+        selection = new Rect(-100,-100,-100,-100);        
     }
 
     public Rect GetSelectionRect()
@@ -47,6 +52,9 @@ public class GridFrameView : MonoBehaviour, iSelectionRect
         frame.drawMode = SpriteDrawMode.Sliced;  // 9 slices :-)
         frame.sprite = settings.sprite;
         frame.sortingOrder = 1000; // at front
+
+        currentColoúr = Color.white;
+        currentColoúr.a = (rotationsEnabled.IsRotationEnabled) ? settings.maxAlpha : settings.minAlpha;
     }
 
 
@@ -79,6 +87,12 @@ public class GridFrameView : MonoBehaviour, iSelectionRect
         }
         // disable/enable rendering
         frame.enabled = selection.xMax >= 0;
+        // update Alpha
+        float deltaAlpha = Time.deltaTime * (settings.maxAlpha - settings.minAlpha) / settings.fadeTime;
+        if (rotationsEnabled.IsRotationEnabled == false)
+            deltaAlpha = -deltaAlpha;
+        currentColoúr.a = Mathf.Clamp(currentColoúr.a + deltaAlpha, settings.minAlpha, settings.maxAlpha);
+        frame.color = currentColoúr;
     }
     // get mouse in GRID position
     private Vector2 GetMouseGridPos()

@@ -157,7 +157,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0.018490477, g: 0.02845659, b: 0.04411763, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -268,6 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1153048281}
   - component: {fileID: 1153048282}
+  - component: {fileID: 1153048283}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -299,7 +300,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05b8f022fff875e4398b1aa2b92688db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelJson: {fileID: 4900000, guid: 6ba7cb6105deeee4e9ec38083b897668, type: 3}
+  levelJson: {fileID: 4900000, guid: 410e0a49fd226394da3c00394318a4e8, type: 3}
+--- !u!114 &1153048283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1153048280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 1153048282}
+  _identifier: 
+  _context: {fileID: 0}
+  _bindType: 1
 --- !u!1 &1390165098
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,6 +486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _components:
   - {fileID: 2109343691}
+  - {fileID: 2109343689}
   _identifier: 
   _context: {fileID: 0}
   _bindType: 1
